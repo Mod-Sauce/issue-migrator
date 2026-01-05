@@ -106,6 +106,7 @@ export default function IssueMigrator() {
     clearMessages();
     setLoading(true);
     try {
+      if (!codebergData) throw new Error('Codeberg issue data not found');
       const closeUrl = `https://api.github.com/repos/${ghInput.owner}/${ghInput.repo}/issues/${ghInput.issueNumber}`;
       const closeResponse = await fetch(closeUrl, {
         method: 'PATCH',
@@ -252,34 +253,34 @@ export default function IssueMigrator() {
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <GitBranch className="w-6 h-6 text-red-500" />
+                <GitBranch className="w-6 h-6 text-violet-500" />
                 Create Codeberg Issue
               </h2>
-              <div className="bg-gray-800/30 border border-orange-900/30 p-6 rounded-xl">
+              <div className="bg-gray-800/30 border border-purple-900/30 p-6 rounded-xl">
                 <p className="text-sm text-gray-400 mb-3"><strong className="text-gray-300">Title:</strong></p>
-                <p className="text-white font-medium mb-4">{gitHubData.title}</p>
-                <p className="text-sm text-gray-400"><strong className="text-gray-300">Author:</strong> {gitHubData.user.login}</p>
+                <p className="text-white font-medium mb-4">{gitHubData?.title}</p>
+                <p className="text-sm text-gray-400"><strong className="text-gray-300">Author:</strong> {gitHubData?.user.login}</p>
               </div>
               <input
                 type="text"
                 placeholder="Codeberg Owner"
                 value={cbInput.owner}
                 onChange={e => setCbInput({...cbInput, owner: e.target.value})}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-white placeholder-gray-500 transition"
+                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500 transition"
               />
               <input
                 type="text"
                 placeholder="Repository Name"
                 value={cbInput.repo}
                 onChange={e => setCbInput({...cbInput, repo: e.target.value})}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-white placeholder-gray-500 transition"
+                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500 transition"
               />
               <input
                 type="password"
                 placeholder="Codeberg Token"
                 value={cbInput.token}
                 onChange={e => setCbInput({...cbInput, token: e.target.value})}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-white placeholder-gray-500 transition"
+                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500 transition"
               />
               <div className="flex gap-3">
                 <button
@@ -291,7 +292,7 @@ export default function IssueMigrator() {
                 <button
                   onClick={createCodebergIssue}
                   disabled={!cbInput.owner || !cbInput.repo || !cbInput.token || loading}
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold py-3 rounded-lg transition"
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold py-3 rounded-lg transition"
                 >
                   {loading ? <Loader className="inline mr-2 w-5 h-5 animate-spin" /> : ''}
                   {loading ? 'Creating...' : 'Create Issue'}
@@ -304,12 +305,12 @@ export default function IssueMigrator() {
           {step === 3 && (
             <div className="space-y-6 animate-in fade-in">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Github className="w-6 h-6 text-orange-500" />
+                <Github className="w-6 h-6 text-purple-500" />
                 Close GitHub Issue
               </h2>
               <div className="bg-green-950/30 border border-green-900/50 p-6 rounded-xl">
                 <p className="text-sm text-green-300 font-medium mb-3">✓ Codeberg Issue Created</p>
-                <p className="text-gray-300 text-sm break-all font-mono">{codebergData.html_url}</p>
+                <p className="text-gray-300 text-sm break-all font-mono">{codebergData?.html_url}</p>
               </div>
               <p className="text-gray-300">This will close the GitHub issue as "not planned" and add a migration link.</p>
               <div className="flex gap-3">
@@ -322,7 +323,7 @@ export default function IssueMigrator() {
                 <button
                   onClick={closeGitHubIssue}
                   disabled={loading}
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold py-3 rounded-lg transition"
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold py-3 rounded-lg transition"
                 >
                   {loading ? <Loader className="inline mr-2 w-5 h-5 animate-spin" /> : ''}
                   {loading ? 'Closing...' : 'Close GitHub Issue'}
@@ -335,8 +336,8 @@ export default function IssueMigrator() {
           {step === 4 && (
             <div className="space-y-8 animate-in fade-in">
               <div className="text-center">
-                <div className="inline-block p-4 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full mb-6">
-                  <CheckCircle2 className="w-12 h-12 text-orange-500" />
+                <div className="inline-block p-4 bg-gradient-to-br from-purple-500/20 to-violet-600/20 rounded-full mb-6">
+                  <CheckCircle2 className="w-12 h-12 text-purple-500" />
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-2">Migration Complete!</h2>
                 <p className="text-gray-400">Your issue has been successfully migrated to Codeberg.</p>
@@ -345,8 +346,8 @@ export default function IssueMigrator() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-300"><strong>Codeberg Issue:</strong></span>
                   <button
-                    onClick={() => window.open(codebergData.html_url, '_blank')}
-                    className="text-orange-400 hover:text-orange-300 flex items-center gap-2 font-medium transition"
+                    onClick={() => window.open(codebergData?.html_url, '_blank')}
+                    className="text-purple-400 hover:text-purple-300 flex items-center gap-2 font-medium transition"
                   >
                     View <Copy className="w-4 h-4" />
                   </button>
@@ -358,7 +359,7 @@ export default function IssueMigrator() {
               </div>
               <button
                 onClick={reset}
-                className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-3 rounded-lg transition"
+                className="w-full bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-bold py-3 rounded-lg transition"
               >
                 Migrate Another Issue
               </button>
@@ -367,7 +368,7 @@ export default function IssueMigrator() {
         </div>
 
         <p className="text-center text-gray-500 text-sm">
-          Get your tokens from GitHub and Codeberg settings • <span className="text-orange-400">Mod-Sauce</span>
+          Get your tokens from GitHub and Codeberg settings • <span className="text-purple-400">Mod-Sauce</span>
         </p>
       </div>
     </div>
