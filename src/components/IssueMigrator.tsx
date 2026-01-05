@@ -55,6 +55,7 @@ export default function IssueMigrator() {
     clearMessages();
     setLoading(true);
     try {
+      if (!gitHubData) throw new Error('GitHub issue data not found');
       const issueBody = `${gitHubData.body}\n\n---\n**Migrated from GitHub** | Originally created by [@${gitHubData.user.login}](${gitHubData.user.html_url}) on GitHub`;
       
       const createUrl = `https://codeberg.org/api/v1/repos/${cbInput.owner}/${cbInput.repo}/issues`;
