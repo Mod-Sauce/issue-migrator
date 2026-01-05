@@ -3,10 +3,24 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, Copy, Loader, Github, GitBranch } from 'lucide-react';
 
+interface GitHubIssue {
+  title: string;
+  body: string;
+  user: {
+    login: string;
+    html_url: string;
+  };
+  labels: Array<{ name: string }>;
+}
+
+interface CodebergIssue {
+  html_url: string;
+}
+
 export default function IssueMigrator() {
   const [step, setStep] = useState(1);
-  const [gitHubData, setGitHubData] = useState(null);
-  const [codebergData, setCodebergData] = useState(null);
+  const [gitHubData, setGitHubData] = useState<GitHubIssue | null>(null);
+  const [codebergData, setCodebergData] = useState<CodebergIssue | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
