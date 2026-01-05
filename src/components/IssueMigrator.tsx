@@ -45,7 +45,7 @@ export default function IssueMigrator() {
       setSuccess('GitHub issue fetched successfully');
       setStep(2);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ export default function IssueMigrator() {
       setSuccess('Codeberg issue created successfully');
       setStep(3);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -120,7 +120,7 @@ export default function IssueMigrator() {
       setSuccess('GitHub issue closed and comment added');
       setStep(4);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
